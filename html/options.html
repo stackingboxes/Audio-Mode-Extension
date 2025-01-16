@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YouTube Blocker Options</title>
+    
+    <!-- <script src="/js/youtubeBlocker_options.js" type="text/javascript"></script> -->
+    <link rel="stylesheet" type="text/css" href="/css/options.css">
+    <link rel="stylesheet" href="/bootstrap/bootstrap.min.css">
+</head>
+    <body class="container">
+        <h2>YouTube Blocker Setup</h2>
+        <p>You must create a free key from YouTube Data API so that the extension knows what videos to block using that key.</p>
+        <h3>Setup (10 minutes)</h3>
+        <ol>
+            <li>Go to <a href="https://cloud.google.com/">Google's Cloud Platform (GCP)</a>. You should already have an account if you are signed in to a google account. If not, then create a free account.</li>
+            <li>Note: You do not have to set any payment method at any time to use this extension.</li>
+                <ul>
+                    <li>Question: <a href="https://www.google.com/search?q=is+youtube+data+api+free&oq=is+youtube+data+api+free&gs_lcrp=EgZjaHJvbWUqCQgAEEUYOxiABDIJCAAQRRg7GIAEMg0IARAAGIYDGIAEGIoFMg0IAhAAGIYDGIAEGIoFMg0IAxAAGIYDGIAEGIoFMg0IBBAAGIYDGIAEGIoFMg0IBRAAGIYDGIAEGIoFMgoIBhAAGIAEGKIE0gEINjUxN2owajGoAgCwAgA&sourceid=chrome&ie=UTF-8">Is YouTube Data API free? </a> Yes. Your requests will stop working after you reach the daily API request quota of 10,000 units per day.</li>
+                </ul>
+            <li>Go to Console on the top right. Then create a new project and name it something like "My Personal YouTube Blocker Project". You can also click on the drop-down on the top left and click "New Project" from there.</li>
+            <img src="/resources/showcase.png" width="75%" height="75%">
+            <li>Click the top left menu and go to <b>'APIs and Services'</b> </li>
+            <li>You should be on your dashboard now. Click 'Enable APIs and Services', search for Youtube Data API v3, click it, and enable it. 
+                You should see a checkmark with 'API Enabled'
+                <ul>
+                    <li>If you don't see that, then click 'Manage' and enable it on the Youtube Data Dashboard</li>
+                </ul>
+            </li>
+            <li>Go back to 'APIs and Services'</li>
+            <li>Click credentials in the left hand menu and click 'Create Credentials' on the page then click API key in the drop down</li>
+            <li>You will see your API Key below with a number and a warning symbol. Click the Api Key you created e.g. API Key 1</li>
+            <li><b>Very Important:</b> Click 'Restrict Key' and select 'Youtube Data API v3'. 
+                <br>This is to limit your key usage to the Youtube Data quota of 10k/day and prevent others from using your key 
+                <ul>
+                    <li>Your 'API Key 1' should now have a checkmark to its left on the 'Credentials' page</li>
+                </ul>
+            </li>
+            <li>Copy and paste your new personal API key in the input below to register it to the extension. It will be a long text key like this: <b>AIzaSyAeebo7DlkB6YyCem51Lq9AOAmFG</b></li>
+            <li>Set your API key then press the Activate button on the extension.
+            Refresh the video if it doesn't work right away. Double check your key is correct if doesn't work after 5 refreshes.
+            </li>
+            <li>Note: You do NOT have to set any payment method. If you did, then you can remove it since YouTube Data is free</li>
+        </ol>
+        
+        <label>
+            <b>Input your key below</b>
+            <br>
+            <input type="text" id="API_KEY" required>
+        </label>
+        <button class="btn btn-primary" id="saveKey">Save</button>
+        
+        <p id="currKey"><u>Your current Youtube Key is: </u></p>
+        <script src="/js/jquery-3.4.1.min.js" type="text/javascript"></script>
+       <script src="/css/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+       <script src="/js/options.js" type="text/javascript"></script>
+
+    </body>
+</html>

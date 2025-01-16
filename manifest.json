@@ -1,0 +1,47 @@
+{
+	"manifest_version": 3,
+	"name": "Audo Mode YT",
+	"version": "1.0.0",
+	"description": "Audio Mode for Music in Youtube",
+	"icons": {
+	  "16": "/resources/sahd-16.png",
+	  "48": "/resources/sahd-48.png",
+	  "128": "/resources/sahd-128.png"
+	},
+	"action": {
+	  "default_title": "Simple Auto HD and YouTube Blocker",
+	  "default_popup": "/html/popup.html",
+	  "default_icon": "/resources/sahd-16.png"
+	},
+	"background": {
+	  "service_worker": "/js/serviceWorker.js",
+	  "type": "module"
+	},
+	"options_page": "/html/options.html",
+	"content_scripts": [
+	  {
+		"matches": ["*://*.youtube.com/*"],
+		"exclude_globs": [
+		  "*/embed/*",
+		  "*/tv#/*",
+		  "*/tv/*"
+		],
+		"all_frames": true,
+		"js": ["/js/content.js"],
+		"run_at": "document_start"
+	  }
+	],
+	"content_security_policy": {
+	  "script-src": "self https://ajax.googleapis.com https://www.googleapis.com",
+	  "object-src": "self"
+	},
+	"permissions": [
+	  "notifications",
+	  "storage",
+	  "background",
+	  "tabs",
+	  "webNavigation"
+	],
+	"host_permissions": ["*://*.youtube.com/*"]
+  }
+  
