@@ -1,23 +1,10 @@
 
-$(document).ready(function(){
+"use strict";
 
-    let activated;
+document.addEventListener("DOMContentLoaded", function() {
+
     getApiKey();
-    $("#saveKey").click(save_options);
-    initiateHarderToDeactivateActions();
-    initiateActivatedValueActions();
-
-    function initiateActivatedValueActions() {
-        chrome.storage.local.get('activated', function(data) {
-            if (data.activated === false) {
-                activated = false;
-            } 
-            else if (data.activated == true) {
-                activated = true;
-            }
-            console.log('activated value: ' + activated);
-        })
-    }
+    document.getElementById('saveKey').addEventListener('click', save_options);
     
     function getApiKey() {
         chrome.storage.local.get('apiKey', function(data) {

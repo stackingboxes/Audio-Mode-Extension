@@ -32,6 +32,8 @@ Extension service workers are more than network proxies (as web service workers 
  * Instead, move the event listener registration to the top level of your script. This ensures that Chrome will be able to immediately find and invoke your action's click handler, even if your extension hasn't finished executing its startup logic.
  */
 
+"use strict";
+
 let LOG_SERVICE_WORKER_PREFIX = "LOG for Youtube Blocker service_worker.js ---> "
 let USER_API_KEY = "No Key Set" //og
 let countApiCalls = 0;
@@ -83,8 +85,7 @@ let countApiCalls = 0;
       });
     });
   })
-//chrome.runtime.onMessage.addListener
-//chrome.webNavigation.onHistoryStateUpdated.addListener(
+
 
 
   function handleYoutubeAPIError(json) {
@@ -130,12 +131,12 @@ let countApiCalls = 0;
     return (match && match[2].length == 11) ? match[2] : null;
   }
 
-  // function showNotification(message) {
-  //   let options = {
-  //       type: 'basic',
-  //       iconUrl: '../resources/icon.png',
-  //       title: "Youtube Blocker",
-  //       message: message,
-  //   }
-  //   chrome.notifications.create('Youtube Blocker', options)
-  // }
+  function showNotification(message) {
+    let options = {
+        type: 'basic',
+        iconUrl: '../resources/sahd-128.png',
+        title: "Audio Mode YT",
+        message: message,
+    }
+    chrome.notifications.create('Audio Mode YT', options)
+  }

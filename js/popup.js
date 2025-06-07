@@ -1,15 +1,11 @@
-    let activated = false;
-    let harderToDeactivate = false;
-    const DEFAULT_API_KEY = "No Key Set";
-    let USER_API_KEY = DEFAULT_API_KEY;
-    let harderDeactivateClicksVal = 10;
-    
-    
+// Description: This script handles the popup functionality for the Audio Mode Extension.
+"use strict";
+
+
     (function() {//    
 
     var version                 = chrome.runtime.getManifest().version;
     var optionsElement          = document.getElementById('options');
-    var theaterModeElement      = document.getElementById('theater-mode');
     var extensionStatusElement  = document.getElementById('extension-status');
     var extensionEnabledElement = document.getElementById('extension-enabled');
     var preferredQualityElement = document.getElementById('preferred-quality');
@@ -19,7 +15,7 @@
     var headerElem = document.querySelector('header .version');
     headerElem.innerText = 'v' + version;
 
-    optionsElement.addEventListener('click', function () {//
+    optionsElement.addEventListener('click', function () {
         console.log("options click: activate options page")
         activateOptionsPage()
        });
@@ -56,26 +52,12 @@
         }
     });
 
-    // chrome.storage.sync.get(['theaterMode'], function(result) { 
-    //     if(result.theaterMode !== undefined) {
-    //         theaterModeElement.checked = result.theaterMode; 
-    //     }
-    // });
-
-    preferredQualityElement.onchange = function() {
-        var selectedString = preferredQualityElement.options[preferredQualityElement.selectedIndex].value;
-
+    preferredQualityElement.addEventListener("change", function() {
+        let selectedString = preferredQualityElement.options[preferredQualityElement.selectedIndex].value;
+    
         chrome.storage.sync.set({preferredQuality: selectedString}, function() {});
         chrome.storage.sync.set({savedPreferredQuality: selectedString}, function() {});
-    };
-
-    // theaterModeElement.addEventListener('change', function(event) {
-    //     if (event.target.checked) {
-    //         setTheaterModeBoolean(true);
-    //     } else {
-    //         setTheaterModeBoolean(false);
-    //     }
-    // });
+});
 
     extensionEnabledElement.addEventListener('change', function(event) {
         if (event.target.checked) {
@@ -87,11 +69,7 @@
         }
     });
 
-    // var setTheaterModeBoolean = function(theaterMode) {
-    //     chrome.storage.sync.set({theaterMode: theaterMode}, function() {});
-    // }
-
-    var setExtensionEnabledBoolean = function(extensionEnabled) {
+    function setExtensionEnabledBoolean(extensionEnabled) {
         chrome.storage.sync.set({extensionEnabled: extensionEnabled}, function() {});
     }
 })();

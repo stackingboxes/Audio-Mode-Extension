@@ -1,3 +1,4 @@
+"use strict";
 
 (function () {
 
@@ -10,11 +11,13 @@
     });
 
 function runObserverIfExtensionEnabled() {
-    var currentUrl = location.href;
+    let currentUrl = location.href;
+    let musicId = "10";
 
-    chrome.storage.sync.get(['extensionEnabled'], function(extensionStatus) {
+    chrome.storage.sync.get(['extensionEnabled'], function(result) {
+        console.log('The status of the extension is: ' + result.extensionEnabled);
 
-        if(extensionStatus.extensionEnabled !== undefined && extensionStatus.extensionEnabled === false) {
+        if(result.extensionEnabled !== undefined && result.extensionEnabled === false) {
             console.log('Simple Auto HD Extension Disabled. Please enable it through popup menu.');
         } else {
             console.log('Simple Auto HD Extension Enabled. Proceeding to initiate observer ');
@@ -24,12 +27,12 @@ function runObserverIfExtensionEnabled() {
                 var categoryId = videoCategoryResponse.json.items[0].snippet.categoryId;
 
                 console.log("cat id is:" + categoryId);
-
-    
-                if(categoryId == "10"){
+                if(categoryId == musicId){
+                    console.log("category is music, setting preferred quality to 144p");
                     chrome.storage.sync.set({preferredQuality: "144p"}, function(){});
                 }
                 else{
+                    console.log("category is not music, removing preferred quality");
                     chrome.storage.sync.remove("preferredQuality", function() {});
                 }
                 
@@ -40,7 +43,6 @@ function runObserverIfExtensionEnabled() {
         }
     });
 }
-let prevUrls = [];
 
  // Configuration of the observer
  var config = {
@@ -49,75 +51,6 @@ let prevUrls = [];
     subtree: true,
     characterData: true
 };
-
-// var theaterModeTitles = [
-//     'Teatermodus',
-//     'Teatr rejimi',
-//     'Tampilan bioskop',
-//     'Mod teater',
-//     'Način rada za kino',
-//     'Mode Cinema',
-//     'Režim kina',
-//     'Biograftilstand',
-//     'Kinomodus',
-//     'Kinorežiim',
-//     'Cinema mode',
-//     'Theater mode',
-//     'Modo Cine',
-//     'Modo cine',
-//     'Antzoki modua',
-//     'Mode cinéma',
-//     'Kinematografski način rada',
-//     'Imodi yethiyetha',
-//     'Kvikmyndahúsastilling',
-//     'Hali ya ukumbi wa filamu',
-//     'Teātra režīms',
-//     'Kino režimas',
-//     'Mozi mód',
-//     'Theatermodus',
-//     'Modo cinema',
-//     'Modo Teatro',
-//     'Modul Cinema',
-//     'Modaliteti i kinemasë',
-//     'Način kina',
-//     'Bioskopski režim',
-//     'Teatteritila',
-//     'Bioläge',
-//     'Chế độ rạp chiếu phim',
-//     'Sinema modu',
-//     'Рэжым тэатра',
-//     'Театр режими',
-//     'Режим на кино сала',
-//     'Широкий экран',
-//     'Режим домашнього кінотеатру',
-//     'Λειτουργία κινηματογράφου',
-//     'Լայն էկրան',
-//     'מצב קולנוע',
-//     'تھیٹر وضع',
-//     'وضع المسرح',
-//     'حالت نمایش',
-//     'थिएटर मोड',
-//     'থিয়েটাৰ ম’ড',
-//     'সিনেমা হল মোড',
-//     'ਥੀਏਟਰ ਮੋਡ',
-//     'થિયેટર મોડ',
-//     'ଥିଏଟର୍‌ ମୋଡ୍‌',
-//     'அரங்கு பயன்முறை',
-//     'థియేటర్ మోడ్',
-//     'ಥಿಯೇಟರ್ ಮೋಡ್',
-//     'തീയേറ്റർ മോഡ്',
-//     'රඟහල ප්‍රකාරය',
-//     'โหมดโรงภาพยนตร์',
-//     'ຮູບແບບໂຮງລະຄອນ',
-//     'ရုပ်ရှင်ရုံ အနေအထား',
-//     'თეატრალური რეჟიმი',
-//     'ቲያትር ሁነታ',
-//     'របៀប​រោងភាពយន្ត',
-//     '剧场模式',
-//     '劇院模式',
-//     'シアター モード',
-//     '영화관 모드(t)'
-// ];
 
 var qualitiesArray = [
     '4320p',
@@ -217,7 +150,7 @@ var qualityTitles = [
 
     // Inititate observer
     function initiateObserverAndObserve() {
-        var observer = new MutationObserver(function (mutations) {
+        var observer = new MutationObserver(function () {
             if (!document.contains(document.querySelector('.ytp-settings-button'))) {
                 return;
             }
@@ -228,8 +161,6 @@ var qualityTitles = [
             // Run code after 100ms
             setTimeout(() => {
                 selectPreferredQuality();
-                // toggleTheaterMode();
-                // listenToTheaterModeButton();
             }, 100)
         });
 
@@ -237,69 +168,20 @@ var qualityTitles = [
     }
 
 
-//use jquery
-
-    // Listen to theater mode button for clicks
-//     function listenToTheaterModeButton() {
-//     var sizeButton = $('.ytp-size-button')[0];
-    
-//     // Listen to theater mode changes
-//     sizeButton.addEventListener('click', function(event) {
-//         var sizeButton = $('.ytp-size-button')[0];
-//         var title = sizeButton.getAttribute('data-title-no-tooltip');
-
-//         var sizeButtonHasTheaterModeTitle = theaterModeTitles.includes(title);
-
-//         if (sizeButtonHasTheaterModeTitle) {
-//             setTheaterModeBoolean(true);
-//         } else {
-//             setTheaterModeBoolean(false);
-//         }
-//     });
-// }
-
-    // Update storage value for theater mode
-    // var setTheaterModeBoolean = function(theaterMode) {
-    //     chrome.storage.sync.set({theaterMode: theaterMode}, function() {});
-    // }
-
-    //  // Get storage value and update theater mode
-    //  var toggleTheaterMode = function () {
-    //     chrome.storage.sync.get(['theaterMode'], function (result) {
-    //         updateTheaterMode(result.theaterMode);
-    //     });
-    // };
-
-       // Update theater mode
-    //    var updateTheaterMode = function (theaterMode) {
-    //     if (theaterMode === undefined) {
-    //         chrome.storage.sync.set({ theaterMode: false }, function () { });
-    //     }
-
-    //     var sizeButton = $('.ytp-size-button')[0];
-    //     var sizeButtonHasTheaterModeTitle = theaterModeTitles.includes(sizeButton.getAttribute('data-title-no-tooltip'));
-
-    //     if (theaterMode && sizeButtonHasTheaterModeTitle) {
-    //         sizeButton.click();
-    //     } else if (!theaterMode && !sizeButtonHasTheaterModeTitle) {
-    //         sizeButton.click();
-    //     }
-    // }
 
 
     // Get storage value and update to given quality
     var selectPreferredQuality = function () {
-
-
-        chrome.storage.sync.get(['preferredQuality'], function (result1) {
-            if(result1.preferredQuality == '144p'){
-                console.log("running result1 and sending " + result1.preferredQuality + " to updateQuality");
+        let minQuality = "144p";
+        
+        chrome.storage.sync.get(["preferredQuality"], function (result1) {
+            if(result1.preferredQuality == minQuality){
+                console.log("preferred quality was 144p -> sending " + result1.preferredQuality + " to updateQuality");
                 updateQuality(result1.preferredQuality);
             }
             else{
-                chrome.storage.sync.get(['savedPreferredQuality'], function (result2) {
-                    console.log("running result2 and sending " + result2.preferredQuality + " to updateQuality");
-
+                chrome.storage.sync.get(["savedPreferredQuality"], function (result2) {
+                    console.log("preferred quality wasn't 144p -> sending " + result2.preferredQuality + " to updateQuality");
                     updateQuality(result2.savedPreferredQuality);
                 
                 });
@@ -310,14 +192,15 @@ var qualityTitles = [
 
 
       // Update to given quality
-      var updateQuality = function (quality) {
+      function updateQuality(quality){
         if (quality === undefined) {
             quality = 'Auto';
-            chrome.storage.sync.set({ preferredQuality: quality }, function () { });
-            console.log("i ran");
+            console.log("updateQuality received 'undefined' -> setting quality to Auto");
         }else{
-            chrome.storage.sync.set({ preferredQuality: quality }, function () { });
+            console.log(`updateQuality received '${quality}' -> setting quality to ${quality}`);
         }
+
+        chrome.storage.sync.set({ preferredQuality: quality }, function () { });
 
         var settingsButton = document.getElementsByClassName('ytp-settings-button')[0];
 
@@ -336,7 +219,7 @@ var qualityTitles = [
         var targetItems = document.querySelectorAll('.ytp-quality-menu .ytp-menuitem-label');
         targetItems = Array.from(targetItems).filter(item => !item.innerHTML.includes("ytp-premium-label"));
         
-        if (quality === 'best-available') {//
+        if (quality === 'best-available') {
             targetItem = targetItems[0];
             
         } else {
@@ -370,27 +253,14 @@ var qualityTitles = [
         return targetItem;
     }
 
-    function getYoutubeUrl(){//
-        let currentUrl = location.href;
-        if (prevUrls.includes(currentUrl)) {
-            console.log('---> Url already fetched. Not fetching again. ---------')
-            return;
-        }
-        prevUrls.push(currentUrl);
-        if (currentUrl == "https://www.youtube.com/") {
-            console.log("Not messaging service_worker for action because url doesn't have a video")
-            return;
-        }
-        return currentUrl;
-    }
-
-
     // Listen for chrome storage changes
     chrome.storage.onChanged.addListener(function (changes, namespace) {
-        for (key in changes) {
-            if (key === 'theaterMode') {
-                toggleTheaterMode();
-            } else if (key === 'preferredQuality') {
+        for (let key in changes) {
+            console.log(`Storage key "${key}" in namespace "${namespace}" changed.`);
+            console.log('Old value:', changes[key].oldValue);
+            console.log('New value:', changes[key].newValue);
+
+             if (key === 'preferredQuality') {
                 selectPreferredQuality();
             }
         }

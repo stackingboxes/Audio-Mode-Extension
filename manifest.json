@@ -32,13 +32,11 @@
 	  }
 	],
 	"content_security_policy": {
-	  "script-src": "self https://ajax.googleapis.com https://www.googleapis.com",
-	  "object-src": "self"
+  		"extension_pages": "script-src 'self'; object-src 'self';"
 	},
 	"permissions": [
 	  "notifications",
 	  "storage",
-	  "background",
 	  "tabs",
 	  "webNavigation"
 	],
