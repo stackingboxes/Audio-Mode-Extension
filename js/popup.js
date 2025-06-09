@@ -54,9 +54,7 @@
 
     preferredQualityElement.addEventListener("change", function() {
         let selectedString = preferredQualityElement.options[preferredQualityElement.selectedIndex].value;
-    
-        chrome.storage.sync.set({preferredQuality: selectedString}, function() {});
-        chrome.storage.sync.set({savedPreferredQuality: selectedString}, function() {});
+            chrome.storage.sync.set({savedPreferredQuality: selectedString}, function() {});
 });
 
     extensionEnabledElement.addEventListener('change', function(event) {

@@ -1,5 +1,7 @@
 "use strict";
 
+const MIN_QUALITY = "144p";
+
 (function () {
 
     // Wait for the page to trigger "yt-navigate-finish" event
@@ -29,19 +31,19 @@ function runObserverIfExtensionEnabled() {
                 console.log("cat id is:" + categoryId);
                 if(categoryId == musicId){
                     console.log("category is music, setting preferred quality to 144p");
-                    chrome.storage.sync.set({preferredQuality: "144p"}, function(){});
+                    chrome.storage.sync.set({preferredQuality: MIN_QUALITY}, initiateObserverAndObserve);
                 }
                 else{
                     console.log("category is not music, removing preferred quality");
-                    chrome.storage.sync.remove("preferredQuality", function() {});
+                    chrome.storage.sync.remove("preferredQuality", initiateObserverAndObserve);
                 }
                 
             });
 
 
-            initiateObserverAndObserve();
         }
     });
+
 }
 
  // Configuration of the observer
@@ -150,8 +152,11 @@ var qualityTitles = [
 
     // Inititate observer
     function initiateObserverAndObserve() {
-        var observer = new MutationObserver(function () {
+        let count = 0;
+
+        let observer = new MutationObserver(function () {
             if (!document.contains(document.querySelector('.ytp-settings-button'))) {
+                console.log("No settings button found, count: " + count);
                 return;
             }
 
@@ -167,15 +172,11 @@ var qualityTitles = [
         observer.observe(document.body, config);
     }
 
-
-
-
     // Get storage value and update to given quality
-    var selectPreferredQuality = function () {
-        let minQuality = "144p";
+    function selectPreferredQuality(){
         
         chrome.storage.sync.get(["preferredQuality"], function (result1) {
-            if(result1.preferredQuality == minQuality){
+            if(result1.preferredQuality == MIN_QUALITY){
                 console.log("preferred quality was 144p -> sending " + result1.preferredQuality + " to updateQuality");
                 updateQuality(result1.preferredQuality);
             }
@@ -252,19 +253,5 @@ var qualityTitles = [
 
         return targetItem;
     }
-
-    // Listen for chrome storage changes
-    chrome.storage.onChanged.addListener(function (changes, namespace) {
-        for (let key in changes) {
-            console.log(`Storage key "${key}" in namespace "${namespace}" changed.`);
-            console.log('Old value:', changes[key].oldValue);
-            console.log('New value:', changes[key].newValue);
-
-             if (key === 'preferredQuality') {
-                selectPreferredQuality();
-            }
-        }
-    });
-
 
 })();
