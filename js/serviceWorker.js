@@ -74,20 +74,6 @@ let countApiCalls = 0;
      USER_API_KEY = data.apiKey
   })
 
-  // notify content script when YouTube dynamically updates DOM to prevent re fetching API
-  chrome.webNavigation.onHistoryStateUpdated.addListener(function() {
-    console.log('The page updated')
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      if (tabs == undefined || tabs[0] == undefined) {
-          return;
-      }
-      chrome.tabs.sendMessage(tabs[0].id, {query: "Page updated"}, function(response) {
-      });
-    });
-  })
-
-
-
   function handleYoutubeAPIError(json) {
     let message = json.error.message;
     console.log("---> Youtube Data API error trigger: " + message)
