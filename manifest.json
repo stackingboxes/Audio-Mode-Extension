@@ -27,7 +27,7 @@
 		  "*/tv/*"
 		],
 		"all_frames": true,
-		"js": ["/js/content.js"],
+		"js": ["/js/qualitySwitchButton.js", "/js/content.js"],
 		"run_at": "document_start"
 	  }
 	],
