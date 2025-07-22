@@ -1,7 +1,4 @@
-"use strict";
-
-const MIN_QUALITY = "144p";
-
+//MIN_QUALITY is in a different file, Question if its bad practice
 (function () {
 
     // Wait for the page to trigger "yt-navigate-finish" event
@@ -11,6 +8,9 @@ const MIN_QUALITY = "144p";
             runObserverIfExtensionEnabled();
         }
     });
+
+})();
+
 
 function runObserverIfExtensionEnabled() {
     let currentUrl = location.href;
@@ -46,15 +46,7 @@ function runObserverIfExtensionEnabled() {
 
 }
 
- // Configuration of the observer
- var config = {
-    childList: true,
-    attributes: true,
-    subtree: true,
-    characterData: true
-};
-
-var qualitiesArray = [
+let qualitiesArray = [
     '4320p',
     '4320p60',
     '4320p50',
@@ -82,7 +74,7 @@ var qualitiesArray = [
     'Auto'
 ];
 
-var qualityTitles = [
+let qualityTitles = [
     'Gehalte',
     'Keyfiyyət',
     'Kualitas',
@@ -150,30 +142,36 @@ var qualityTitles = [
     '화질'
 ];
 
-    // Inititate observer
-    function initiateObserverAndObserve() {
-        let count = 0;
+let observer;
+// Inititate observer
+function initiateObserverAndObserve() {
 
-        let observer = new MutationObserver(function () {
-            if (!document.contains(document.querySelector('.ytp-settings-button'))) {
-                console.log("No settings button found, count: " + count);
-                return;
-            }
+    observer = new MutationObserver(function () {
+        const SETTINGS_BTN = document.querySelector('.ytp-settings-button');
+        const VIDEO_AD = document.querySelector('.ad-showing');
+ 
 
+        if (document.contains(VIDEO_AD) || !document.contains(SETTINGS_BTN)) {
+            console.log("AD detected or settings button not found");
             observer.disconnect();
+            setTimeout(initiateObserverAndObserve, 2000)
+            return;
+        }
 
-        
-            // Run code after 100ms
-            setTimeout(() => {
-                selectPreferredQuality();
-            }, 100)
-        });
+    observer.disconnect();
 
-        observer.observe(document.body, config);
-    }
 
-    // Get storage value and update to given quality
-    function selectPreferredQuality(){
+    // Run code after 100ms
+    setTimeout(() => {
+        selectPreferredQuality();
+    }, 100)
+    });
+
+    observer.observe(document.body, config);
+}
+
+// Get storage value and update to given quality
+function selectPreferredQuality(){
         
         chrome.storage.sync.get(["preferredQuality"], function (result1) {
             if(result1.preferredQuality == MIN_QUALITY){
@@ -191,67 +189,67 @@ var qualityTitles = [
         });
     };
 
-
-      // Update to given quality
-      function updateQuality(quality){
-        if (quality === undefined) {
-            quality = 'Auto';
-            console.log("updateQuality received 'undefined' -> setting quality to Auto");
-        }else{
-            console.log(`updateQuality received '${quality}' -> setting quality to ${quality}`);
-        }
-
-        chrome.storage.sync.set({ preferredQuality: quality }, function () { });
-
-        var settingsButton = document.getElementsByClassName('ytp-settings-button')[0];
-
-        settingsButton.click();
-
-        var buttons = document.getElementsByClassName('ytp-menuitem-label');
-
-        for (var i = 0; i < buttons.length; i++) {
-            if (qualityTitles.includes(buttons[i].innerHTML)) {
-                buttons[i].click();
-            }
-        }
-
-        var targetItem;
-
-        var targetItems = document.querySelectorAll('.ytp-quality-menu .ytp-menuitem-label');
-        targetItems = Array.from(targetItems).filter(item => !item.innerHTML.includes("ytp-premium-label"));
-        
-        if (quality === 'best-available') {
-            targetItem = targetItems[0];
-            
-        } else {
-            targetItem = findTargetItem(quality, targetItems);
-        }
-
-        targetItem.click();
+    // Update to given quality
+function updateQuality(quality){
+    if (quality === undefined) {
+        quality = 'Auto';
+        console.log("updateQuality received 'undefined' -> setting quality to Auto");
+    }else{
+        console.log(`updateQuality received '${quality}' -> setting quality to ${quality}`);
     }
 
-    function findTargetItem(preferredQuality, targetItems) {
-        var targetItem = '';
-        
-        for (var i = 0; i < targetItems.length; i++) {
-            var potentialTargetItem = targetItems[i].childNodes[0].childNodes[0];
+    chrome.storage.sync.set({ preferredQuality: quality }, function () { });
 
-            var quality = potentialTargetItem.innerHTML.split(' ')[0];
+    var settingsButton = document.getElementsByClassName('ytp-settings-button')[0];
 
-            if (quality === preferredQuality) {
-                targetItem = potentialTargetItem;
-            }
+    settingsButton.click();
+
+    var buttons = document.getElementsByClassName('ytp-menuitem-label');
+
+    for (var i = 0; i < buttons.length; i++) {
+        if (qualityTitles.includes(buttons[i].innerHTML)) {
+            buttons[i].click();
         }
-
-        var key = qualitiesArray.indexOf(preferredQuality);
-
-        if (targetItem === '' && (qualitiesArray[key + 1] !== undefined)) {
-            preferredQuality = qualitiesArray[key + 1];
-
-            return findTargetItem(preferredQuality, targetItems);
-        }
-
-        return targetItem;
     }
 
-})();
+    var targetItem;
+
+    var targetItems = document.querySelectorAll('.ytp-quality-menu .ytp-menuitem-label');
+    targetItems = Array.from(targetItems).filter(item => !item.innerHTML.includes("ytp-premium-label"));
+
+    if (quality === 'best-available') {
+        targetItem = targetItems[0];
+        
+    } else {
+        targetItem = findTargetItem(quality, targetItems);
+    }
+
+    targetItem.click();
+}
+
+function findTargetItem(preferredQuality, targetItems) {
+    var targetItem = '';
+    
+    for (var i = 0; i < targetItems.length; i++) {
+        var potentialTargetItem = targetItems[i].childNodes[0].childNodes[0];
+
+        var quality = potentialTargetItem.innerHTML.split(' ')[0];
+
+        if (quality === preferredQuality) {
+            targetItem = potentialTargetItem;
+        }
+    }
+
+    var key = qualitiesArray.indexOf(preferredQuality);
+
+    if (targetItem === '' && (qualitiesArray[key + 1] !== undefined)) {
+        preferredQuality = qualitiesArray[key + 1];
+
+        return findTargetItem(preferredQuality, targetItems);
+    }
+
+    return targetItem;
+}
+
+
+

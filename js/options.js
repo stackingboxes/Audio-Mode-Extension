@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function() {
     function getApiKey() {
         chrome.storage.local.get('apiKey', function(data) {
             let value = "";
-            console.log('Key value is: ' + data.apiKey);
             let key = data.apiKey;
             if (key == "") {
                 value = "You do not have a key set.";
@@ -17,7 +16,8 @@ document.addEventListener("DOMContentLoaded", function() {
             else {
                 value = "Your current Youtube key is: <b id='key'>" + key + "</b>";
             }
-            $('#currKey').html(value);
+            document.getElementById("currKey").innerHTML = value;
+
         })  
     }
 
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function isValidKey() {
-        let key = $('#API_KEY').val();
+        let key = document.getElementById("API_KEY").value;
         if (!key) {
             alert("Please enter a key");
             return false;
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     function setApiKey() {
-        let key = $('#API_KEY').val();
+        let key = document.getElementById("API_KEY").value;
         console.log(key);
         chrome.storage.local.set({apiKey : key}, function(){
             console.log('set api key: ' + key);

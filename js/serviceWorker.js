@@ -70,9 +70,16 @@ let countApiCalls = 0;
       return true; // We MUST return true to indicate we want to send back a response asynchronously so that the message port here doesn't close before a response is returned back to the contentScript. Source: https://stackoverflow.com/a/57608759/9882969. What's a scenario for returning false? This is just telling the API to keep the messaging port open indefinitely, which if you don't need then return false as it's just a potential memory leak source.
   });
 
-  chrome.storage.local.get('apiKey', function(data) {
-     USER_API_KEY = data.apiKey
-  })
+
+function getStorage(key) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(key, (data) => {
+      if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
+      else resolve(data[key]);
+    });
+  });
+}
+
 
   function handleYoutubeAPIError(json) {
     let message = json.error.message;
@@ -82,20 +89,29 @@ let countApiCalls = 0;
     if (isBadRequest) {
         message = "Your Youtube key is invalid. Please make sure it is correct in the options page."
     }
-    showNotification(message)
+    showNotification(message);
   }
 
   async function initiateIsAllowed(url) {
+
+    try {
+      USER_API_KEY = await getStorage('apiKey');
+      console.log(LOG_SERVICE_WORKER_PREFIX, "Loaded API key:", USER_API_KEY);
+    } catch (error) {
+        console.error(LOG_SERVICE_WORKER_PREFIX, "Error reading apiKey:", error);
+        return;  // Exit early if there's no valid API key
+    }
+
     let videoId = parseToId(url);
     console.log('New Youtube video id:' + videoId)
 
     let isURLNotYoutubeVideo = videoId == null;
     if (isURLNotYoutubeVideo){
-       return;
+      return;
     }
 
     const restAPI = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${USER_API_KEY}&fields=items(snippet(categoryId))`
-    console.log("---> restAPI call: ")
+    console.log("---> restAPI call: ");
     console.log(restAPI);
 
     countApiCalls++;
@@ -108,6 +124,7 @@ let countApiCalls = 0;
     console.log('--response json--')
     console.log(json);
     return json;
+
   }
 
   function parseToId(url){
