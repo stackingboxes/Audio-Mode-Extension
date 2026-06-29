@@ -41,5 +41,5 @@
 	  "webNavigation"
 	],
 	"host_permissions": ["*://*.youtube.com/*"]
-  }
-  
+
+}

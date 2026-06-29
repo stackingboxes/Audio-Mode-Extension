@@ -69,4 +69,5 @@ function flipPreferredQuality() {
       chrome.storage.sync.set({ preferredQuality: MIN_QUALITY }, initiateObserverAndObserve);
     }
   });
-}
+} 
+//

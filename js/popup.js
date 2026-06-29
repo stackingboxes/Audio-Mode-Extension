@@ -72,4 +72,5 @@ if (!DEBUG) {
   function setExtensionEnabledBoolean(extensionEnabled) {
     chrome.storage.sync.set({ extensionEnabled: extensionEnabled }, function () {});
   }
-})();
+})(); 
+//

@@ -152,4 +152,5 @@ function showNotification(message) {
     message: message,
   };
   chrome.notifications.create('Audio Mode YT', options);
-}
+} 
+//
