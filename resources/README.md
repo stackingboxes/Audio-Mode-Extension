@@ -1,0 +1,1 @@
+Image assets and icons for the extension
