@@ -4,8 +4,8 @@ A lightweight browser extension designed to optimize your computer's performance
 
 If you are running on a lower-end computer, an older laptop, or just want to reduce unnecessary CPU load and bandwidth, this tool does the heavy lifting for you. It recognizes that you don't need 1080p video rendering to listen to a song, and automatically adjusts your settings to save system resources.
 
-<img width="1085" height="246" alt="Managed Load" src="https://github.com/user-attachments/assets/7aac1f64-4b26-439d-a24f-2870864b1fb7" />
 <img width="1085" height="252" alt="Unmanaged Load" src="https://github.com/user-attachments/assets/0a8858e0-abec-46d4-9a92-289dd7b37918" />
+<img width="1085" height="246" alt="Managed Load" src="https://github.com/user-attachments/assets/7aac1f64-4b26-439d-a24f-2870864b1fb7" />
 
 ## Key Features
 
