@@ -76,3 +76,7 @@ For lower-end computers, keeping browser tabs to a minimum is just as important 
 First, ensure that any adblockers are disabled or not interfering with the extension as this can sometimes cause problems. If the issue persists, it is likely due to how the video was categorized by its creator.
 
 This extension relies on the official YouTube category set by the uploader to trigger the quality change. If a creator uploads a standard video but categorizes it as "Music" (or vice versa), the extension will apply the corresponding settings for that category.
+
+
+
+**This was created with avi12's extension as one of the foundation**
